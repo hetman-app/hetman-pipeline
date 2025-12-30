@@ -1,0 +1,77 @@
+site_name: Hetman Pipeline
+
+theme:
+    name: material
+    custom_dir: docs/overrides
+
+    font:
+        text: Inter
+
+    icon:
+        repo: fontawesome/brands/github
+
+    logo: assets/full-white-text.webp
+    favicon: assets/favicon-transparent.webp
+
+    palette:
+        scheme: slate
+        primary: black
+        accent: custom
+
+    features:
+        - navigation.instant
+        - navigation.instant.prefetch
+        - navigation.footer
+        - navigation.tracking
+        - navigation.top
+        - navigation.expand
+        - content.code.copy
+        - announce.dismiss
+        - search.highlight
+        - search.share
+        - content.action.edit
+        - content.action.view
+
+nav:
+    - Introduction: index.md
+    - Usage & Examples: examples.md
+    - Advanced Features:
+          - Pipeline Hooks: hooks.md
+          - Handler Modifiers: modifiers.md
+          - Error Customization: customization.md
+          - Framework Integrations: integrations.md
+    - Lifecycle:
+          - Condition: condition.md
+          - Match: match.md
+          - Transform: transform.md
+    - Custom Handlers: custom_handlers.md
+    - Technical Reference: technical_reference.md
+
+extra_css:
+    - stylesheets/extra.css
+
+site_url: https://pipeline.hetman.app
+
+repo_url: https://github.com/hetman-app/hetman-pipeline
+repo_name: hetman-app/hetman-pipeline
+
+plugins:
+    - mkdocstrings:
+          default_handler: python
+          handlers:
+              python:
+                  paths: [.]
+                  options:
+                      docstring_style: google
+                      show_root_heading: false
+                      show_source: true
+    - search
+
+markdown_extensions:
+    - admonition
+    - pymdownx.details
+    - pymdownx.superfences:
+          custom_fences:
+              - name: mermaid
+                class: mermaid
+                format: !!python/name:pymdownx.superfences.fence_code_format

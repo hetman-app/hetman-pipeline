@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hetman-pipeline"
+version = "2.0.0"
+description = "Hetman Pipeline is a flexible, developer-centric validation engine. It is built for those who prioritize deep customization and want to manage validation, matching, and transformation logic in one centralized location."
+readme = "README.MD"
+requires-python = ">=3.10"
+license-files = ["LICENSE"]
+authors = [{ name = "Hetman", email = "degadupeko@my-relay.app" }]
+classifiers = [
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+]
+dependencies = []
+
+[project.urls]
+Repository = "https://github.com/hetman-app/hetman-pipeline"
+
+[tool.setuptools.packages.find]
+where = ["."]
+
+[project.optional-dependencies]
+falcon = ["falcon>=4.0.0"]
+docs = ["mkdocs>=1.6", "mkdocstrings[python]>=0.18.1", "mkdocs-material>=9.7.1"]

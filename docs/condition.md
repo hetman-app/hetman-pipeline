@@ -1,6 +1,6 @@
 # Condition Stage
 
-The **Condition** stage is the first step in the `Pipe` lifecycle. It is responsible for validating the fundamental integrity of the data, such as its type, presence, size, and basic constraints.
+The **Condition** stage is the second step in the `Pipe` lifecycle (after optional Setup). It is responsible for validating the fundamental integrity of the data, such as its type, presence, size, and basic constraints.
 
 !!! info "Execution Rule"
 

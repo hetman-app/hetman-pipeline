@@ -25,21 +25,29 @@ The architecture is divided into two main layers:
 
 ## The Pipe Lifecycle
 
-Each Pipe follows a strict, sequential three-stage execution flow. This "fail-fast" approach ensures that transformations only occur on data that has already been verified.
+Each Pipe follows a strict, sequential four-stage execution flow. This "fail-fast" approach ensures that transformations only occur on data that has already been verified.
 
 ```mermaid
 flowchart TD
-    Start([Input Value]) --> Condition[Stage 1: Condition]
+    Start([Input Value]) --> Optional{Optional &<br/>Falsy?}
+    Optional -->|Yes| EarlyReturn([Return Early])
+    Optional -->|No| TypeCheck[Type Validation]
 
-    Condition --> CondCheck{All Conditions<br/>Pass?}
+    TypeCheck --> TypeValid{Type Valid?}
+    TypeValid -->|No| TypeError([Return with<br/>Type Error])
+    TypeValid -->|Yes| Setup
+
+    Setup[Stage 1: Setup] --> Condition
+
+    Condition[Stage 2: Condition] --> CondCheck{All Conditions<br/>Pass?}
     CondCheck -->|No| CollectCondErrors[Collect Condition Errors]
     CondCheck -->|Yes| Match
 
-    Match[Stage 2: Match] --> MatchCheck{All Matches<br/>Pass?}
+    Match[Stage 3: Match] --> MatchCheck{All Matches<br/>Pass?}
     MatchCheck -->|No| CollectMatchErrors[Collect Match Errors]
     MatchCheck -->|Yes| Transform
 
-    Transform[Stage 3: Transform] --> Result
+    Transform[Stage 4: Transform] --> Result
 
     CollectCondErrors --> Result
     CollectMatchErrors --> Result
@@ -49,13 +57,22 @@ flowchart TD
 
 ### Stage Details
 
-1. **Condition** - Validates data integrity (type, size, range)
-2. **Match** - Validates content format (regex, patterns)
-3. **Transform** - Modifies and normalizes data
+1. **Setup** - Prepares data using transform handlers (e.g., Strip whitespace) before validation
+2. **Condition** - Validates data integrity (type, size, range)
+3. **Match** - Validates content format (regex, patterns)
+4. **Transform** - Modifies and normalizes data after successful validation
 
 !!! note "Hooks are Pipeline-Level"
 
     Individual Pipes don't have hooks. Hooks (pre_hook, post_hook) are defined at the **Pipeline** level and execute before/after each Pipe runs.
+
+!!! tip "Setup vs Pre-Hook"
+
+    While `pre_hook` can perform the same data preparation as `setup`, the `setup` argument is a **developer-friendly simplification**. Key differences:
+
+    - **Scope**: `setup` is **per-pipe** (defined individually for each field), while `pre_hook` is **global** (applies to all pipes in a Pipeline)
+    - **Use `setup`** for: Simple, field-specific transformations (like stripping whitespace from a specific field)
+    - **Use `pre_hook`** for: Global logic that applies to all fields, or complex custom logic
 
 !!! info "Condition Loop Behavior"
 

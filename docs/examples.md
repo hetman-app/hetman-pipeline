@@ -25,6 +25,40 @@ print(result.condition_errors)  # []
 print(result.match_errors)  # []
 ```
 
+### Using Setup for Data Preparation
+
+The `setup` argument allows you to prepare data before validation. This is useful for normalizing input (like stripping whitespace) before running conditions or matches:
+
+```python
+from pipeline.core.pipe.pipe import Pipe
+
+# Without setup - validation might fail due to whitespace
+pipe_without_setup = Pipe(
+    value="  USER@example.com  ",
+    type=str,
+    conditions={Pipe.Condition.MaxLength: 18},  # Will fail: length is 21 with spaces
+    matches={Pipe.Match.Format.Email: None}
+)
+
+# With setup - whitespace is stripped before validation
+pipe_with_setup = Pipe(
+    value="  USER@example.com  ",
+    type=str,
+    setup={Pipe.Transform.Strip: None},  # Runs first, before validation
+    conditions={Pipe.Condition.MaxLength: 18},  # Now passes: length is 16
+    matches={Pipe.Match.Format.Email: None},
+    transform={Pipe.Transform.Lowercase: None}
+)
+
+result = pipe_with_setup.run()
+print(result.value)  # user@example.com (stripped and lowercased)
+print(result.condition_errors)  # []
+```
+
+!!! tip "Setup vs Pre-Hook"
+
+    While `pre_hook` can achieve the same result, `setup` is a simpler, declarative way to prepare data. **Important**: `setup` is **per-pipe** (field-specific), while `pre_hook` is **global** (applies to all fields). Use `setup` for field-specific transformations and `pre_hook` for global logic or complex custom logic.
+
 ---
 
 ## 2. Schema-based Pipeline

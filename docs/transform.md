@@ -10,6 +10,78 @@ It modifies the value into its final form before it is returned by the pipeline 
 
 ---
 
+## Setup vs Transform: When to Use Each
+
+Both `setup` and `transform` use transform handlers, but they run at different stages of the Pipe lifecycle:
+
+| Feature          | Setup                                                | Transform                                    |
+| ---------------- | ---------------------------------------------------- | -------------------------------------------- |
+| **When it runs** | After type validation, **before** conditions/matches | After all validations pass (**final** stage) |
+| **Purpose**      | Data preparation and normalization                   | Data modification and formatting             |
+| **Validation**   | Only type is validated                               | All conditions and matches have passed       |
+| **Use case**     | Strip whitespace, normalize input                    | Format output, apply business logic          |
+
+### Example: Setup for Preparation
+
+Use `setup` when you need to normalize data **before** validation:
+
+```python
+from pipeline.core.pipe.pipe import Pipe
+
+# Setup strips whitespace BEFORE checking email format
+result = Pipe(
+    value="  user@example.com  ",
+    type=str,
+    setup={Pipe.Transform.Strip: None},  # Runs first
+    matches={Pipe.Match.Format.Email: None},  # Validates cleaned value
+).run()
+
+print(result.value)  # "user@example.com" (no spaces)
+```
+
+### Example: Transform for Formatting
+
+Use `transform` when you need to modify data **after** validation:
+
+```python
+from pipeline.core.pipe.pipe import Pipe
+
+# Transform lowercases AFTER validation passes
+result = Pipe(
+    value="User@Example.COM",
+    type=str,
+    matches={Pipe.Match.Format.Email: None},  # Validates first
+    transform={Pipe.Transform.Lowercase: None}  # Formats after validation
+).run()
+
+print(result.value)  # "user@example.com"
+```
+
+### Combining Setup and Transform
+
+You can use both together for a complete data processing pipeline:
+
+```python
+from pipeline.core.pipe.pipe import Pipe
+
+result = Pipe(
+    value="  User@Example.COM  ",
+    type=str,
+    setup={Pipe.Transform.Strip: None},  # 1. Clean input
+    conditions={Pipe.Condition.MaxLength: 50},  # 2. Validate structure
+    matches={Pipe.Match.Format.Email: None},  # 3. Validate format
+    transform={Pipe.Transform.Lowercase: None}  # 4. Format output
+).run()
+
+print(result.value)  # "user@example.com"
+```
+
+!!! tip "Setup vs Pre-Hook"
+
+    While `pre_hook` can perform the same data preparation as `setup`, the `setup` argument is a **developer-friendly simplification**. **Important**: `setup` is **per-pipe** (field-specific), while `pre_hook` is **global** (applies to all fields in a Pipeline). Use `setup` for field-specific transformations and `pre_hook` for global logic or complex custom logic.
+
+---
+
 ## Advanced: Custom Transformation Logic
 
 While transformations are powerful, sometimes you need custom logic. Use hooks for this:

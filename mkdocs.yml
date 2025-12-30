@@ -55,6 +55,8 @@ site_url: https://pipeline.hetman.app
 repo_url: https://github.com/hetman-app/hetman-pipeline
 repo_name: hetman-app/hetman-pipeline
 
+edit_uri: blob/main/docs/
+
 plugins:
     - mkdocstrings:
           default_handler: python

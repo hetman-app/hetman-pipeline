@@ -22,11 +22,13 @@ class Pipe(Generic[V, T]):
     The execution flow is strict:
     1. Optional Check: If the pipe is optional and the value is falsy, it returns early.
     2. Type Validation: Checks if the value matches the expected type (via `Condition.ValueType`).
-    3. Conditions: Runs a set of condition handlers. If any fail, errors are collected, and processing
+    3. Setup: Executes setup (transform) handlers (e.g. Strip) to modify the value. Only the
+       value type is validated prior to this stage.
+    4. Conditions: Runs a set of condition handlers. If any fail, errors are collected, and processing
        may stop if `BREAK_PIPE_LOOP_ON_ERROR` flag is set.
-    4. Matches: Only if no condition errors occurred, match handlers are executed. These are typically
+    5. Matches: Only if no condition errors occurred, match handlers are executed. These are typically
        regex-based checks.
-    5. Transform: Only if no match errors occurred, transform handlers are executed to modify the value.
+    6. Transform: Only if no match errors occurred, transform handlers are executed to modify the value.
 
     Attributes:
         Condition (Type[Condition]): The condition handler class registry.
@@ -55,6 +57,10 @@ class Pipe(Generic[V, T]):
         Args:
             value (V): The value to process.
             type (T): The expected type of the value (e.g., `str`, `int`).
+            setup (Optional[PipeTransform]): A dictionary of transform handlers and their arguments.
+                Used for data setup (e.g. Strip). Use with caution. Setup runs after type validation, but
+                before conditions, matches, and transform handlers. Only the value type is
+                validated at the time of setup execution.
             conditions (Optional[PipeConditions]): A dictionary of condition handlers and their arguments.
                 Used for logical validation (e.g., `MinLength`, `Equal`).
             matches (Optional[PipeMatches]): A dictionary of match handlers and their arguments.
@@ -88,7 +94,7 @@ class Pipe(Generic[V, T]):
         """
         Executes the pipe processing logic.
 
-        The method strictly follows the defined order of operations. Note that
+        The method strictly follows the defined order of execution flow. Note that
         Transformations are ONLY applied if all validations (Conditions and Matches) pass.
         This provides a safe way to transform data, ensuring it is valid first.
 

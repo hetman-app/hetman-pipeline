@@ -1,6 +1,6 @@
 # Match Stage
 
-The **Match** stage is the second step in the `Pipe` lifecycle. It is executed **only if all previous Conditions have passed**.
+The **Match** stage is the third step in the `Pipe` lifecycle (after optional Setup and Condition). It is executed **only if all previous Conditions have passed**.
 
 While Conditions check for structural integrity (type and size), the Match stage focuses on **semantic validation** - ensuring the content of the data follows a specific pattern or format.
 

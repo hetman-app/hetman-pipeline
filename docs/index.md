@@ -12,8 +12,6 @@ pip install hetman-pipeline
 
 ---
 
----
-
 ## Core Concepts
 
 The architecture is divided into two main layers:

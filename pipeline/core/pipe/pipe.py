@@ -94,8 +94,15 @@ class Pipe(Generic[V, T]):
         """
         Executes the pipe processing logic.
 
-        The method strictly follows the defined order of execution flow. Note that
-        Transformations are ONLY applied if all validations (Conditions and Matches) pass.
+        The method orchestrates the execution flow by delegating to specialized helper methods:
+        1. Checks if validation should be skipped (optional pipe with falsy value)
+        2. Validates the value type
+        3. Processes setup handlers (if any)
+        4. Processes condition handlers
+        5. Processes match handlers (only if no condition errors)
+        6. Processes transform handlers (only if no condition or match errors)
+
+        Note that transformations are ONLY applied if all validations (Conditions and Matches) pass.
         This provides a safe way to transform data, ensuring it is valid first.
 
         Returns:
@@ -117,6 +124,13 @@ class Pipe(Generic[V, T]):
         return self._construct_result()
 
     def _construct_result(self) -> PipeResult[V]:
+        """
+        Constructs and returns the final PipeResult.
+
+        Returns:
+            PipeResult[V]: A result object containing the current value and any accumulated
+            condition or match errors.
+        """
         return PipeResult(
             value=self.value,
             condition_errors=self._condition_errors,
@@ -124,18 +138,46 @@ class Pipe(Generic[V, T]):
         )
 
     def _should_skip_validation(self) -> bool:
+        """
+        Determines whether validation should be skipped for this pipe.
+
+        Validation is skipped only if the pipe is marked as optional and the value is falsy
+        (e.g., None, empty string, 0, False).
+
+        Returns:
+            bool: True if validation should be skipped, False otherwise.
+        """
         if not self.optional:
             return False
 
         return not bool(self.value)
 
     def _is_value_type_correct(self) -> bool:
+        """
+        Validates that the value matches the expected type.
+
+        Uses the `Condition.ValueType` handler to check type correctness. If the type
+        is incorrect, an error is appended to the condition errors list.
+
+        Returns:
+            bool: True if the value type is correct, False otherwise.
+        """
         if (error := self.Condition.ValueType(self.value, self.type).handle()):
             self._condition_errors.append(error)
 
         return not error
 
     def _process_setup(self) -> None:
+        """
+        Processes setup transform handlers to prepare the value for validation.
+
+        Setup handlers are executed after type validation but before conditions, matches,
+        and transform handlers. They are typically used for data normalization (e.g., Strip).
+        Each handler modifies the value in place.
+
+        Note:
+            Setup handlers run even if subsequent validations might fail. Use with caution.
+        """
         if not self.setup:
             return
 
@@ -145,6 +187,16 @@ class Pipe(Generic[V, T]):
             ).handle()
 
     def _process_conditions(self) -> None:
+        """
+        Processes condition handlers to validate the value.
+
+        Iterates through all condition handlers and executes them. If a handler returns an error,
+        it is appended to the condition errors list. If a handler has the `BREAK_PIPE_LOOP_ON_ERROR`
+        flag set, the loop terminates immediately upon encountering an error.
+
+        Note:
+            Condition errors prevent match and transform handlers from executing.
+        """
         if not self.conditions:
             return
 
@@ -160,6 +212,17 @@ class Pipe(Generic[V, T]):
                     break
 
     def _process_matches(self) -> None:
+        """
+        Processes match handlers to perform pattern-based validation.
+
+        Match handlers are only executed if no condition errors occurred. Typically used for
+        regex-based validation (e.g., Email, URL patterns). The loop terminates immediately
+        upon the first match error.
+
+        Note:
+            This method is skipped if any condition errors exist. Match errors prevent
+            transform handlers from executing.
+        """
         if not self.matches or len(self._condition_errors) != 0:
             return
 
@@ -174,6 +237,17 @@ class Pipe(Generic[V, T]):
                 break
 
     def _process_transform(self) -> None:
+        """
+        Processes transform handlers to modify the value.
+
+        Transform handlers are only executed if no condition or match errors occurred.
+        This ensures that transformations are only applied to valid data. Each handler
+        modifies the value in place.
+
+        Note:
+            This method is skipped if any condition or match errors exist, ensuring
+            transformations are only applied to validated data.
+        """
         if not self.transform or len(self._condition_errors) != 0 or\
                                  len(self._match_errors) != 0:
             return

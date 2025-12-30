@@ -102,58 +102,83 @@ class Pipe(Generic[V, T]):
             PipeResult[V]: The result containing the processed value (or original value if errors occurred)
             and lists of any condition or match errors.
         """
-        if self.optional and (bool(self.value) is False):
-            return PipeResult(
-                value=self.value, condition_errors=[], match_errors=[]
-            )
+        if self._should_skip_validation():
+            return self._construct_result()
 
-        if (error := self.Condition.ValueType(self.value, self.type).handle()):
-            return PipeResult(
-                value=self.value, condition_errors=[error], match_errors=[]
-            )
+        if not self._is_value_type_correct():
+            return self._construct_result()
 
-        if self.setup:
-            for handler, argument in self.setup.items():
-                self.value = handler(
-                    value=self.value, argument=argument, context=self.context
-                ).handle()
+        self._process_setup()
 
-        if self.conditions:
-            for handler, argument in self.conditions.items():
-                handler = handler(
-                    value=self.value, argument=argument, context=self.context
-                )
+        self._process_conditions()
+        self._process_matches()
+        self._process_transform()
 
-                if (error := handler.handle()):
-                    self._condition_errors.append(error)
+        return self._construct_result()
 
-                    if ConditionFlag.BREAK_PIPE_LOOP_ON_ERROR in handler.FLAGS:
-                        break
-
-        if len(self._condition_errors) == 0:
-            if self.matches:
-                for handler, argument in self.matches.items():
-                    handler = handler(
-                        value=self.value,
-                        argument=argument,
-                        context=self.context
-                    )
-
-                    if (error := handler.handle()):
-                        self._match_errors.append(error)
-
-                        break
-
-            if self.transform and len(self._match_errors) == 0:
-                for handler, argument in self.transform.items():
-                    self.value = handler(
-                        value=self.value,
-                        argument=argument,
-                        context=self.context
-                    ).handle()
-
+    def _construct_result(self) -> PipeResult[V]:
         return PipeResult(
             value=self.value,
             condition_errors=self._condition_errors,
             match_errors=self._match_errors
         )
+
+    def _should_skip_validation(self) -> bool:
+        if not self.optional:
+            return False
+
+        return not bool(self.value)
+
+    def _is_value_type_correct(self) -> bool:
+        if (error := self.Condition.ValueType(self.value, self.type).handle()):
+            self._condition_errors.append(error)
+
+        return not error
+
+    def _process_setup(self) -> None:
+        if not self.setup:
+            return
+
+        for handler, argument in self.setup.items():
+            self.value = handler(
+                value=self.value, argument=argument, context=self.context
+            ).handle()
+
+    def _process_conditions(self) -> None:
+        if not self.conditions:
+            return
+
+        for handler, argument in self.conditions.items():
+            handler = handler(
+                value=self.value, argument=argument, context=self.context
+            )
+
+            if (error := handler.handle()):
+                self._condition_errors.append(error)
+
+                if ConditionFlag.BREAK_PIPE_LOOP_ON_ERROR in handler.FLAGS:
+                    break
+
+    def _process_matches(self) -> None:
+        if not self.matches or len(self._condition_errors) != 0:
+            return
+
+        for handler, argument in self.matches.items():
+            handler = handler(
+                value=self.value, argument=argument, context=self.context
+            )
+
+            if (error := handler.handle()):
+                self._match_errors.append(error)
+
+                break
+
+    def _process_transform(self) -> None:
+        if not self.transform or len(self._condition_errors) != 0 or\
+                                 len(self._match_errors) != 0:
+            return
+
+        for handler, argument in self.transform.items():
+            self.value = handler(
+                value=self.value, argument=argument, context=self.context
+            ).handle()

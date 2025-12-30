@@ -41,6 +41,7 @@ class Pipe(Generic[V, T]):
         self,
         value: V,
         type: T,
+        setup: Optional[PipeTransform] = None,
         conditions: Optional[PipeConditions] = None,
         matches: Optional[PipeMatches] = None,
         transform: Optional[PipeTransform] = None,
@@ -68,6 +69,8 @@ class Pipe(Generic[V, T]):
         self.value: V = value
 
         self.type: T = type
+
+        self.setup: Optional[PipeTransform] = setup
 
         self.conditions: Optional[PipeConditions] = conditions
         self.matches: Optional[PipeMatches] = matches
@@ -102,6 +105,12 @@ class Pipe(Generic[V, T]):
             return PipeResult(
                 value=self.value, condition_errors=[error], match_errors=[]
             )
+
+        if self.setup:
+            for handler, argument in self.setup.items():
+                self.value = handler(
+                    value=self.value, argument=argument, context=self.context
+                ).handle()
 
         if self.conditions:
             for handler, argument in self.conditions.items():

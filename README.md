@@ -1,4 +1,4 @@
-<img src="./docs/assets/full-white-text.webp" alt="Hetman Logo" width="200" height="38" />
+<img src="https://raw.githubusercontent.com/hetman-app/hetman-pipeline/main/docs/assets/full-white-text.webp" alt="Hetman Logo" width="200" height="38" />
 
 ---
 

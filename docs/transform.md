@@ -14,12 +14,12 @@ It modifies the value into its final form before it is returned by the pipeline 
 
 Both `setup` and `transform` use transform handlers, but they run at different stages of the Pipe lifecycle:
 
-| Feature | Setup | Transform |
-|---------|-------|-----------|
+| Feature          | Setup                                                | Transform                                    |
+| ---------------- | ---------------------------------------------------- | -------------------------------------------- |
 | **When it runs** | After type validation, **before** conditions/matches | After all validations pass (**final** stage) |
-| **Purpose** | Data preparation and normalization | Data modification and formatting |
-| **Validation** | Only type is validated | All conditions and matches have passed |
-| **Use case** | Strip whitespace, normalize input | Format output, apply business logic |
+| **Purpose**      | Data preparation and normalization                   | Data modification and formatting             |
+| **Validation**   | Only type is validated                               | All conditions and matches have passed       |
+| **Use case**     | Strip whitespace, normalize input                    | Format output, apply business logic          |
 
 ### Example: Setup for Preparation
 
@@ -77,6 +77,7 @@ print(result.value)  # "user@example.com"
 ```
 
 !!! tip "Setup vs Pre-Hook"
+
     While `pre_hook` can perform the same data preparation as `setup`, the `setup` argument is a **developer-friendly simplification**. **Important**: `setup` is **per-pipe** (field-specific), while `pre_hook` is **global** (applies to all fields in a Pipeline). Use `setup` for field-specific transformations and `pre_hook` for global logic or complex custom logic.
 
 ---

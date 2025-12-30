@@ -32,11 +32,11 @@ flowchart TD
     Start([Input Value]) --> Optional{Optional &<br/>Falsy?}
     Optional -->|Yes| EarlyReturn([Return Early])
     Optional -->|No| TypeCheck[Type Validation]
-    
+
     TypeCheck --> TypeValid{Type Valid?}
     TypeValid -->|No| TypeError([Return with<br/>Type Error])
     TypeValid -->|Yes| Setup
-    
+
     Setup[Stage 1: Setup] --> Condition
 
     Condition[Stage 2: Condition] --> CondCheck{All Conditions<br/>Pass?}
@@ -69,7 +69,7 @@ flowchart TD
 !!! tip "Setup vs Pre-Hook"
 
     While `pre_hook` can perform the same data preparation as `setup`, the `setup` argument is a **developer-friendly simplification**. Key differences:
-    
+
     - **Scope**: `setup` is **per-pipe** (defined individually for each field), while `pre_hook` is **global** (applies to all pipes in a Pipeline)
     - **Use `setup`** for: Simple, field-specific transformations (like stripping whitespace from a specific field)
     - **Use `pre_hook`** for: Global logic that applies to all fields, or complex custom logic

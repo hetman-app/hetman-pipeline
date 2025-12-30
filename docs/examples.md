@@ -56,6 +56,7 @@ print(result.condition_errors)  # []
 ```
 
 !!! tip "Setup vs Pre-Hook"
+
     While `pre_hook` can achieve the same result, `setup` is a simpler, declarative way to prepare data. **Important**: `setup` is **per-pipe** (field-specific), while `pre_hook` is **global** (applies to all fields). Use `setup` for field-specific transformations and `pre_hook` for global logic or complex custom logic.
 
 ---

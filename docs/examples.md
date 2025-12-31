@@ -346,9 +346,6 @@ Pipe.Condition.MinLength.ERROR_TEMPLATES[HandlerMode.ROOT] = lambda self: (
 )
 
 def my_error_builder(self: "ConditionHandler"):
-    if ConditionFlag.RETURN_ONLY_ERROR_MSG in self.FLAGS:
-        return self.error_msg
-
     return {'id': self.id, 'msg': self.error_msg, 'value': self.value, 'hello': 'world'}
 
 # Also, you can define ERROR_BUILDER for a specific condition.

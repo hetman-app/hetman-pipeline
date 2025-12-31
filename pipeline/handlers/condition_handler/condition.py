@@ -169,13 +169,11 @@ class Condition:
 
     class Pipeline(ConditionHandler[dict, Pipeline]):
         """Validates a dictionary using the same rules as the normal pipeline, but for nested data."""
-        FLAGS = (ConditionFlag.RETURN_ONLY_ERROR_MSG, )
-
         SUPPORT = (HandlerMode.ROOT, )
 
-        ERROR_TEMPLATES = {
-            HandlerMode.ROOT: lambda self: self.metadata['errors']
-        }
+        ERROR_BUILDER = lambda self: self.metadata['errors']
+
+        ERROR_TEMPLATES = {HandlerMode.ROOT: lambda _: None}
 
         def query(self):
             self.metadata['errors'] = self.argument.run(data=self.value).errors

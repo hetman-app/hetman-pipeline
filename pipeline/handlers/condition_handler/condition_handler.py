@@ -7,8 +7,6 @@ from pipeline.handlers.base_handler.base_handler import A, BaseHandler, V
 from pipeline.handlers.base_handler.resources.constants import HandlerMode
 from pipeline.handlers.base_handler.resources.exceptions import \
     HandlerModeException
-from pipeline.handlers.condition_handler.resources.constants import \
-    ConditionFlag
 from pipeline.handlers.condition_handler.resources.exceptions import \
     ConditionMissingRootErrorMsg
 
@@ -20,9 +18,6 @@ if TYPE_CHECKING:
 
 
 def default_error_builder(self: "ConditionHandler"):
-    if ConditionFlag.RETURN_ONLY_ERROR_MSG in self.FLAGS:
-        return self.error_msg
-
     return {'id': self.id, 'msg': self.error_msg, 'value': self.value}
 
 

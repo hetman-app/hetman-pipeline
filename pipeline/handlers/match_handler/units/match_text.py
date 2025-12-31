@@ -21,6 +21,17 @@ class MatchText:
         def query(self):
             return self.fullmatch(r"^[a-z]+$")
 
+    class LowercaseWithSpaces(MatchHandler[str, None]):
+        """Accepts lowercase English letters (a-z) and spaces"""
+        SUPPORT = (HandlerMode.ROOT, HandlerMode.ITEM)
+
+        ERROR_TEMPLATES = {
+            HandlerMode.ROOT: lambda _: "Can only contain lowercase letters and spaces."
+        }
+
+        def query(self):
+            return self.fullmatch(r"^[a-z ]+$")
+
     class Uppercase(MatchHandler[str, None]):
         """Accepts ONLY uppercase English letters (A-Z)"""
         SUPPORT = (HandlerMode.ROOT, HandlerMode.ITEM)
@@ -31,6 +42,17 @@ class MatchText:
 
         def query(self):
             return self.fullmatch(r"^[A-Z]+$")
+
+    class UppercaseWithSpaces(MatchHandler[str, None]):
+        """Accepts uppercase English letters (A-Z) and spaces"""
+        SUPPORT = (HandlerMode.ROOT, HandlerMode.ITEM)
+
+        ERROR_TEMPLATES = {
+            HandlerMode.ROOT: lambda _: "Can only contain uppercase letters and spaces."
+        }
+
+        def query(self):
+            return self.fullmatch(r"^[A-Z ]+$")
 
     class Letters(MatchHandler[str, None]):
         """Accepts ONLY case English letters (a-z, A-Z)"""
@@ -43,6 +65,17 @@ class MatchText:
         def query(self):
             return self.fullmatch(r"^[a-zA-Z]+$")
 
+    class LettersWithSpaces(MatchHandler[str, None]):
+        """Accepts English letters (a-z, A-Z) and spaces"""
+        SUPPORT = (HandlerMode.ROOT, HandlerMode.ITEM)
+
+        ERROR_TEMPLATES = {
+            HandlerMode.ROOT: lambda _: "Can only contain letters and spaces."
+        }
+
+        def query(self):
+            return self.fullmatch(r"^[a-zA-Z ]+$")
+
     class Digits(MatchHandler[str, None]):
         """Accepts ONLY numeric digits (0-9)"""
         SUPPORT = (HandlerMode.ROOT, HandlerMode.ITEM)
@@ -54,6 +87,17 @@ class MatchText:
         def query(self):
             return self.fullmatch(r"^\d+$")
 
+    class DigitsWithSpaces(MatchHandler[str, None]):
+        """Accepts numeric digits (0-9) and spaces"""
+        SUPPORT = (HandlerMode.ROOT, HandlerMode.ITEM)
+
+        ERROR_TEMPLATES = {
+            HandlerMode.ROOT: lambda _: "Can only contain digits and spaces."
+        }
+
+        def query(self):
+            return self.fullmatch(r"^[\d ]+$")
+
     class Alphanumeric(MatchHandler[str, None]):
         """Accepts letters and numeric digits. No symbols or spaces"""
         SUPPORT = (HandlerMode.ROOT, HandlerMode.ITEM)
@@ -64,6 +108,17 @@ class MatchText:
 
         def query(self):
             return self.fullmatch(r"^[a-zA-Z0-9]+$")
+
+    class AlphanumericWithSpaces(MatchHandler[str, None]):
+        """Accepts letters, numeric digits, and spaces. No symbols"""
+        SUPPORT = (HandlerMode.ROOT, HandlerMode.ITEM)
+
+        ERROR_TEMPLATES = {
+            HandlerMode.ROOT: lambda _: "Can only contain letters, digits, and spaces."
+        }
+
+        def query(self):
+            return self.fullmatch(r"^[a-zA-Z0-9 ]+$")
 
     class Printable(MatchHandler[str, None]):
         """Accepts letters, numbers, symbols, and spaces (ASCII 20-7E)"""

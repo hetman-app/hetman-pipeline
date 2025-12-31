@@ -74,8 +74,8 @@ person_pipeline = Pipeline(
     name={
         "type": str,
         "conditions": {Pipe.Condition.MaxLength: 50},
-        "matches": {Pipe.Match.Text.Letters: None},
-        "transform": {Pipe.Transform.Capitalize: None}
+        "matches": {Pipe.Match.Text.LettersWithSpaces: None},
+        "transform": {Pipe.Transform.Title: None}
     },
     age={
         "type": int,
@@ -100,14 +100,14 @@ person_pipeline = Pipeline(
 
 # Validate data
 result = person_pipeline.run(data={
-    "name": "john",
+    "name": "john smith",
     "age": 30,
     "email": "John@Example.com"
 })
 
 print(result.processed_data, result.errors)
 # {
-#     'name': 'John',  # Capitalized
+#     'name': 'John Smith',  # Title Case
 #     'age': 30,
 #     'email': 'john@example.com',  # Lowercased
 #     'bio': None

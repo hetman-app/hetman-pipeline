@@ -1,5 +1,5 @@
 from functools import wraps
-from typing import Any, ClassVar
+from typing import Any, Callable, ClassVar, ParamSpec, TypeVar
 
 from pipeline.core.pipe.resources.types import PipeContext
 from pipeline.core.pipeline.resources.constants import (
@@ -10,6 +10,9 @@ from pipeline.core.pipeline.resources.types import (
     PipelineHandleErrorsFunc, PipelineHookFunc, PipelinePipeConfig
 )
 from pipeline.handlers.condition_handler.resources.types import ConditionErrors
+
+F = TypeVar("F")
+P = ParamSpec("P")
 
 
 class Pipeline:
@@ -187,7 +190,7 @@ class Pipeline:
 
         self._processed_data[field] = value
 
-    def __call__(self, func: Any) -> Any:
+    def __call__(self, func: Callable[P, F]) -> Callable[P, F]:
         """
         Decorator to run the pipeline before a function execution.
 
@@ -206,14 +209,14 @@ class Pipeline:
             PipelineException: If the pipeline encounters errors and no error handler is defined.
         """
         @wraps(func)
-        def wrapper(*args, **kwargs):
+        def wrapper(*args: P.args, **kwargs: P.kwargs) -> F:
             result: PipelineResult = self.run(data=kwargs)
 
             if result.errors and not self.handle_errors or result.processed_data is None:
                 raise PipelineException(result.errors)
 
-            kwargs = {**kwargs, **result.processed_data}
+            updated_kwargs: dict = {**kwargs, **result.processed_data}
 
-            return func(*args, **kwargs)
+            return func(*args, **updated_kwargs)
 
         return wrapper

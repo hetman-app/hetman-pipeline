@@ -166,8 +166,8 @@ class Pipeline:
 
         if self.pre_hook:
             self.pre_hook(hook)
-        elif Pipeline.global_pre_hook:
-            Pipeline.global_pre_hook(hook)
+        elif self.__class__.global_pre_hook:
+            self.__class__.global_pre_hook(hook)
 
         if isinstance(value, dict):
             context = value
@@ -185,8 +185,8 @@ class Pipeline:
 
         if self.post_hook:
             self.post_hook(hook)
-        elif Pipeline.global_post_hook:
-            Pipeline.global_post_hook(hook)
+        elif self.__class__.global_post_hook:
+            self.__class__.global_post_hook(hook)
 
         self._processed_data[field] = value
 

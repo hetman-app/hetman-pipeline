@@ -1,5 +1,5 @@
 import re
-from typing import Callable, Optional
+from typing import Any, Callable, Optional
 
 from pipeline.handlers.base_handler.resources.constants import HandlerMode
 from pipeline.handlers.transform_handler.transform_handler import \
@@ -94,7 +94,7 @@ class Transform:
 
             return self.value.replace(old, new)
 
-    class Apply(TransformHandler[str, Callable]):
+    class Apply(TransformHandler[Any, Callable]):
         """
         Transforms the value by passing it through the provided callable.
 

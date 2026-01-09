@@ -105,8 +105,11 @@ class Pipeline:
                 pipe_config=pipe_config
             )
 
-        if self._errors and self.handle_errors:
-            self.handle_errors(self._errors)
+        if self._errors:
+            error_handler = self.handle_errors or self.__class__.global_handle_errors
+
+            if error_handler:
+                error_handler(self._errors)
 
         return PipelineResult(
             errors=self._errors or None,

@@ -15,7 +15,7 @@ class MatchText:
         SUPPORT = (HandlerMode.ROOT, HandlerMode.ITEM)
 
         ERROR_TEMPLATES = {
-            HandlerMode.ROOT: lambda _: "Can only contain lowercase letters."
+            HandlerMode.ROOT: lambda _: "Must contain only lowercase letters (a-z)."
         }
 
         def query(self):
@@ -26,7 +26,9 @@ class MatchText:
         SUPPORT = (HandlerMode.ROOT, HandlerMode.ITEM)
 
         ERROR_TEMPLATES = {
-            HandlerMode.ROOT: lambda _: "Can only contain lowercase letters and spaces."
+            HandlerMode.ROOT:
+                lambda _:
+                "Must contain only lowercase letters and spaces (e.g., 'hello world')."
         }
 
         def query(self):
@@ -37,7 +39,7 @@ class MatchText:
         SUPPORT = (HandlerMode.ROOT, HandlerMode.ITEM)
 
         ERROR_TEMPLATES = {
-            HandlerMode.ROOT: lambda _: "Can only contain uppercase letters."
+            HandlerMode.ROOT: lambda _: "Must contain only uppercase letters (A-Z)."
         }
 
         def query(self):
@@ -48,7 +50,9 @@ class MatchText:
         SUPPORT = (HandlerMode.ROOT, HandlerMode.ITEM)
 
         ERROR_TEMPLATES = {
-            HandlerMode.ROOT: lambda _: "Can only contain uppercase letters and spaces."
+            HandlerMode.ROOT:
+                lambda _:
+                "Must contain only uppercase letters and spaces (e.g., 'HELLO WORLD')."
         }
 
         def query(self):
@@ -59,7 +63,7 @@ class MatchText:
         SUPPORT = (HandlerMode.ROOT, HandlerMode.ITEM)
 
         ERROR_TEMPLATES = {
-            HandlerMode.ROOT: lambda _: "Can only contain letters."
+            HandlerMode.ROOT: lambda _: "Must contain only letters (a-z, A-Z)."
         }
 
         def query(self):
@@ -70,7 +74,9 @@ class MatchText:
         SUPPORT = (HandlerMode.ROOT, HandlerMode.ITEM)
 
         ERROR_TEMPLATES = {
-            HandlerMode.ROOT: lambda _: "Can only contain letters and spaces."
+            HandlerMode.ROOT:
+                lambda _:
+                "Must contain only letters and spaces (e.g., 'Hello World')."
         }
 
         def query(self):
@@ -81,7 +87,7 @@ class MatchText:
         SUPPORT = (HandlerMode.ROOT, HandlerMode.ITEM)
 
         ERROR_TEMPLATES = {
-            HandlerMode.ROOT: lambda _: "Can only contain digits."
+            HandlerMode.ROOT: lambda _: "Must contain only digits (0-9)."
         }
 
         def query(self):
@@ -92,7 +98,9 @@ class MatchText:
         SUPPORT = (HandlerMode.ROOT, HandlerMode.ITEM)
 
         ERROR_TEMPLATES = {
-            HandlerMode.ROOT: lambda _: "Can only contain digits and spaces."
+            HandlerMode.ROOT:
+                lambda _:
+                "Must contain only digits and spaces (e.g., '123 456')."
         }
 
         def query(self):
@@ -103,7 +111,8 @@ class MatchText:
         SUPPORT = (HandlerMode.ROOT, HandlerMode.ITEM)
 
         ERROR_TEMPLATES = {
-            HandlerMode.ROOT: lambda _: "Can only contain letters and digits."
+            HandlerMode.ROOT:
+                lambda _: "Must contain only letters and digits (e.g., 'abc123')."
         }
 
         def query(self):
@@ -114,7 +123,9 @@ class MatchText:
         SUPPORT = (HandlerMode.ROOT, HandlerMode.ITEM)
 
         ERROR_TEMPLATES = {
-            HandlerMode.ROOT: lambda _: "Can only contain letters, digits, and spaces."
+            HandlerMode.ROOT:
+                lambda _:
+                "Must contain only letters, digits, and spaces (e.g., 'abc 123')."
         }
 
         def query(self):
@@ -126,7 +137,8 @@ class MatchText:
 
         ERROR_TEMPLATES = {
             HandlerMode.ROOT:
-                lambda _: "Contains invalid or non-printable characters."
+                lambda _:
+                "Contains invalid characters. Only printable ASCII characters are allowed."
         }
 
         def query(self):
@@ -137,7 +149,8 @@ class MatchText:
         SUPPORT = (HandlerMode.ROOT, HandlerMode.ITEM)
 
         ERROR_TEMPLATES = {
-            HandlerMode.ROOT: lambda _: "Cannot contain spaces or tabs."
+            HandlerMode.ROOT:
+                lambda _: "Must not contain spaces, tabs, or line breaks."
         }
 
         def query(self):
@@ -149,7 +162,8 @@ class MatchText:
 
         ERROR_TEMPLATES = {
             HandlerMode.ROOT:
-                lambda _: "Must be lowercase letters, numbers, and hyphens."
+                lambda _:
+                "Must contain only lowercase letters, numbers, and hyphens (e.g., 'my-post-123')."
         }
 
         def query(self):

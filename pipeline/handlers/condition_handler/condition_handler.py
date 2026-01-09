@@ -98,7 +98,7 @@ class ConditionHandler(BaseHandler[V, A]):
             items = self.input_value.items()
         else:
             raise HandlerModeException(
-                "The condition/match handler input value is not of type list, tuple, set, or dict."
+                "Cannot iterate over value. Expected a list, tuple, set, or dict."
             )
 
         for key, value in items:

@@ -30,8 +30,7 @@ class Condition:
 
         ERROR_TEMPLATES = {
             HandlerMode.ROOT:
-                lambda self:
-                f"Invalid format. Please provide a {self.argument.__name__}."
+                lambda self: f"Invalid type. Expected {self.argument.__name__}."
         }
 
         def query(self):
@@ -44,9 +43,9 @@ class Condition:
         ERROR_TEMPLATES = {
             HandlerMode.ROOT:
                 lambda self:
-                f"Too short. This must be at least {self.argument} characters."
+                f"Too short. Minimum length is {self.argument} characters."
                 if isinstance(self.value, str) else
-                f"Please select at least {self.argument} items."
+                f"Too few items. Minimum count is {self.argument}."
         }
 
         def query(self):
@@ -63,7 +62,7 @@ class Condition:
                 lambda self:
                 f"Too long. Maximum length is {self.argument} characters."
                 if isinstance(self.value, str) else
-                f"You can select a maximum of {self.argument} items."
+                f"Too many items. Maximum count is {self.argument}."
         }
 
         def query(self):
@@ -75,7 +74,7 @@ class Condition:
 
         ERROR_TEMPLATES = {
             HandlerMode.ROOT:
-                lambda self: f"Must be {self.argument} or greater."
+                lambda self: f"Value must be at least {self.argument}."
         }
 
         def query(self):
@@ -86,7 +85,7 @@ class Condition:
         SUPPORT = (HandlerMode.ROOT, HandlerMode.ITEM, HandlerMode.CONTEXT)
 
         ERROR_TEMPLATES = {
-            HandlerMode.ROOT: lambda self: f"Must be {self.argument} or less."
+            HandlerMode.ROOT: lambda self: f"Value must be at most {self.argument}."
         }
 
         def query(self):
@@ -110,9 +109,7 @@ class Condition:
         SUPPORT = (HandlerMode.ROOT, HandlerMode.ITEM)
 
         ERROR_TEMPLATES = {
-            HandlerMode.ROOT:
-                lambda self:
-                f"This value is not allowed. Please use a different value that is not in {list(self.argument)}."
+            HandlerMode.ROOT: lambda _: "This value is not allowed."
         }
 
         def query(self):
@@ -124,7 +121,7 @@ class Condition:
 
         ERROR_TEMPLATES = {
             HandlerMode.ROOT:
-                lambda self: f"The value must match {self.argument}."
+                lambda _: "Value does not match the expected value."
         }
 
         def query(self):
@@ -135,8 +132,7 @@ class Condition:
         SUPPORT = (HandlerMode.ROOT, HandlerMode.ITEM, HandlerMode.CONTEXT)
 
         ERROR_TEMPLATES = {
-            HandlerMode.ROOT:
-                lambda self: f"Value cannot be equal to {self.argument}."
+            HandlerMode.ROOT: lambda _: "Value must be different."
         }
 
         def query(self):
@@ -148,7 +144,7 @@ class Condition:
 
         ERROR_TEMPLATES = {
             HandlerMode.CONTEXT:
-                lambda self: f"This must match the {self.input_argument} field."
+                lambda self: f'Must match the "{self.input_argument}" field.'
         }
 
         def query(self):
@@ -161,7 +157,7 @@ class Condition:
         ERROR_TEMPLATES = {
             HandlerMode.CONTEXT:
                 lambda self:
-                f"This cannot be the same as the {self.input_argument} field."
+                f'Must be different from the "{self.input_argument}" field.'
         }
 
         def query(self):

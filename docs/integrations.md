@@ -24,8 +24,8 @@ The `process_request` decorator validates incoming request data and injects vali
 
 ```python
 from falcon import App
-from pipeline.integration.falcon.decorator import process_request
-from pipeline.core.pipe.pipe import Pipe
+from pipeline.integration.falcon import process_request
+from pipeline import Pipe
 
 class UserResource:
     @process_request(
@@ -82,8 +82,8 @@ app.add_route('/users', UserResource())
 
 ```python
 from falcon import App, Request, Response
-from pipeline.integration.falcon.decorator import process_request
-from pipeline.core.pipe.pipe import Pipe
+from pipeline.integration.falcon import process_request
+from pipeline import Pipe
 
 class RegistrationResource:
     @process_request(
@@ -218,8 +218,8 @@ The decorator also works with GET requests, validating query parameters:
 
 ```python
 from falcon import App
-from pipeline.integration.falcon.decorator import process_request
-from pipeline.core.pipe.pipe import Pipe
+from pipeline.integration.falcon import process_request
+from pipeline import Pipe
 
 class SearchResource:
     @process_request(
@@ -276,8 +276,8 @@ The decorator automatically detects and supports ASGI applications:
 
 ```python
 from falcon.asgi import App, Request, Response
-from pipeline.integration.falcon.decorator import process_request
-from pipeline.core.pipe.pipe import Pipe
+from pipeline.integration.falcon import process_request
+from pipeline import Pipe
 
 class AsyncUserResource:
     @process_request(
@@ -313,8 +313,8 @@ The global error handler should **raise an exception** with your custom error fo
 
 ```python
 from falcon import HTTPBadRequest
-from pipeline.integration.falcon.decorator import PipelineFalcon, process_request
-from pipeline.core.pipe.pipe import Pipe
+from pipeline.integration.falcon import PipelineFalcon, process_request
+from pipeline import Pipe
 
 def custom_error_handler(errors: dict):
     """
@@ -372,8 +372,8 @@ If you need different error handling for specific pipelines, you can pass `handl
 
 ```python
 from falcon import HTTPBadRequest
-from pipeline.integration.falcon.decorator import process_request
-from pipeline.core.pipe.pipe import Pipe
+from pipeline.integration.falcon import process_request
+from pipeline import Pipe
 
 def strict_error_handler(errors: dict):
     """Strict error handler that includes detailed information"""
@@ -432,8 +432,7 @@ While Hetman Pipeline currently has built-in support for Falcon, you can easily 
 
 ```python
 from flask import Flask, request, jsonify
-from pipeline.core.pipeline.pipeline import Pipeline
-from pipeline.core.pipe.pipe import Pipe
+from pipeline import Pipeline, Pipe
 
 app = Flask("test_app")
 

@@ -11,8 +11,7 @@ Condition handlers validate data integrity. They must implement the `query()` me
 ### Basic Structure
 
 ```python
-from pipeline.handlers.base_handler.resources.constants import HandlerMode
-from pipeline.handlers.condition_handler.condition_handler import ConditionHandler
+from pipeline.handlers import HandlerMode, ConditionHandler
 
 class MyCustomCondition(ConditionHandler[ValueType, ArgumentType]):
     """Your custom condition handler"""
@@ -40,9 +39,8 @@ class MyCustomCondition(ConditionHandler[ValueType, ArgumentType]):
 ### Example 1: Custom Age Validator
 
 ```python
-from pipeline.handlers.base_handler.resources.constants import HandlerMode
-from pipeline.handlers.condition_handler.condition_handler import ConditionHandler
-from pipeline.core.pipe.pipe import Pipe
+from pipeline.handlers import HandlerMode, ConditionHandler
+from pipeline import Pipe
 
 class IsAdult(ConditionHandler[int, None]):
     """Validates that age is 18 or older"""
@@ -73,9 +71,8 @@ print(result.condition_errors)
 ### Example 2: Custom Business Rule
 
 ```python
-from pipeline.handlers.base_handler.resources.constants import HandlerMode
-from pipeline.handlers.condition_handler.condition_handler import ConditionHandler
-from pipeline.core.pipe.pipe import Pipe
+from pipeline.handlers import HandlerMode, ConditionHandler
+from pipeline import Pipe
 
 class IsValidCouponCode(ConditionHandler[str, list]):
     """Validates coupon code against a list of valid codes"""
@@ -109,11 +106,9 @@ print(result.condition_errors)
 ### Example 3: Context-Aware Validation
 
 ```python
-from pipeline.handlers.base_handler.resources.constants import HandlerMode
-from pipeline.handlers.condition_handler.condition_handler import ConditionHandler
-from pipeline.core.pipeline.pipeline import Pipeline
-from pipeline.core.pipe.pipe import Pipe
-from pipeline.handlers.base_handler.handler_modifiers import Context
+from pipeline.handlers import HandlerMode, ConditionHandler
+from pipeline import Pipeline, Pipe
+from pipeline.handlers import Context
 
 class IsGreaterThanField(ConditionHandler[int | float, int | float]):
     """Validates that value is greater than another field in context"""
@@ -165,8 +160,7 @@ Transform handlers modify values. They must implement the `operation()` method t
 ### Basic Structure
 
 ```python
-from pipeline.handlers.base_handler.resources.constants import HandlerMode
-from pipeline.handlers.transform_handler.transform_handler import TransformHandler
+from pipeline.handlers import HandlerMode, TransformHandler
 
 class MyCustomTransform(TransformHandler[ValueType, ArgumentType]):
     """Your custom transform handler"""
@@ -188,9 +182,8 @@ class MyCustomTransform(TransformHandler[ValueType, ArgumentType]):
 ### Example 1: Custom String Sanitizer
 
 ```python
-from pipeline.handlers.base_handler.resources.constants import HandlerMode
-from pipeline.handlers.transform_handler.transform_handler import TransformHandler
-from pipeline.core.pipe.pipe import Pipe
+from pipeline.handlers import HandlerMode, TransformHandler
+from pipeline import Pipe
 import re
 
 class RemoveSpecialChars(TransformHandler[str, None]):
@@ -217,9 +210,8 @@ print(result.value)  # "Hello World 2024"
 ### Example 2: Custom Price Formatter
 
 ```python
-from pipeline.handlers.base_handler.resources.constants import HandlerMode
-from pipeline.handlers.transform_handler.transform_handler import TransformHandler
-from pipeline.core.pipe.pipe import Pipe
+from pipeline.handlers import HandlerMode, TransformHandler
+from pipeline import Pipe
 
 class RoundToDecimalPlaces(TransformHandler[float, int]):
     """Rounds a float to specified decimal places"""
@@ -246,9 +238,8 @@ print(result.value)  # 20.0
 ### Example 3: Custom List Transformer
 
 ```python
-from pipeline.handlers.base_handler.resources.constants import HandlerMode
-from pipeline.handlers.transform_handler.transform_handler import TransformHandler
-from pipeline.core.pipe.pipe import Pipe
+from pipeline.handlers import HandlerMode, TransformHandler
+from pipeline import Pipe
 
 class SortList(TransformHandler[list, bool]):
     """Sorts a list. Argument: True for ascending, False for descending"""
@@ -274,9 +265,8 @@ print(result.value)  # [1, 2, 5, 8, 9]
 ### Example 4: Custom Data Masking
 
 ```python
-from pipeline.handlers.base_handler.resources.constants import HandlerMode
-from pipeline.handlers.transform_handler.transform_handler import TransformHandler
-from pipeline.core.pipe.pipe import Pipe
+from pipeline.handlers import HandlerMode, TransformHandler
+from pipeline import Pipe
 
 class MaskCreditCard(TransformHandler[str, None]):
     """Masks credit card number, showing only last 4 digits"""

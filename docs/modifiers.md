@@ -31,8 +31,8 @@ The `Item()` modifier transforms a handler to operate on each element of a colle
 ### Example 1: Validate All Items in a List
 
 ```python
-from pipeline.core.pipe.pipe import Pipe
-from pipeline.handlers.base_handler.handler_modifiers import Item
+from pipeline import Pipe
+from pipeline.handlers import Item
 
 # Validate that all emails in a list are valid
 result = Pipe(
@@ -64,8 +64,8 @@ print(result.match_errors)
 ### Example 2: Transform All Items
 
 ```python
-from pipeline.core.pipe.pipe import Pipe
-from pipeline.handlers.base_handler.handler_modifiers import Item
+from pipeline import Pipe
+from pipeline.handlers import Item
 
 # Capitalize all strings in a list
 result = Pipe(
@@ -87,8 +87,8 @@ print(result.value)
 The `use_key` parameter allows you to validate or transform **dictionary keys** instead of values.
 
 ```python
-from pipeline.core.pipe.pipe import Pipe
-from pipeline.handlers.base_handler.handler_modifiers import Item
+from pipeline import Pipe
+from pipeline.handlers import Item
 
 # Validate that all dictionary keys match a pattern
 data = {
@@ -148,8 +148,8 @@ print(result.match_errors)
 The `only_consider` parameter allows you to apply a handler **only to items of a specific type**.
 
 ```python
-from pipeline.core.pipe.pipe import Pipe
-from pipeline.handlers.base_handler.handler_modifiers import Item
+from pipeline import Pipe
+from pipeline.handlers import Item
 
 # Mixed-type list: only capitalize strings
 result = Pipe(
@@ -174,9 +174,8 @@ print(result.value)
 ### Example 5: Complex Validation with Item()
 
 ```python
-from pipeline.core.pipeline.pipeline import Pipeline
-from pipeline.core.pipe.pipe import Pipe
-from pipeline.handlers.base_handler.handler_modifiers import Item
+from pipeline import Pipeline, Pipe
+from pipeline.handlers import Item
 
 # Validate a list of user objects
 user_list_pipeline = Pipeline(
@@ -234,9 +233,8 @@ The `Context()` modifier allows a handler to use a value from the **pipeline con
 Validate that a password confirmation field matches the original password:
 
 ```python
-from pipeline.core.pipeline.pipeline import Pipeline
-from pipeline.core.pipe.pipe import Pipe
-from pipeline.handlers.base_handler.handler_modifiers import Context
+from pipeline import Pipeline, Pipe
+from pipeline.handlers import Context
 
 # Create a registration pipeline
 registration_pipeline = Pipeline(
@@ -281,9 +279,8 @@ print(result.errors)
 Validate that a value is within a range defined by other fields:
 
 ```python
-from pipeline.core.pipeline.pipeline import Pipeline
-from pipeline.core.pipe.pipe import Pipe
-from pipeline.handlers.base_handler.handler_modifiers import Context
+from pipeline import Pipeline, Pipe
+from pipeline.handlers import Context
 
 # Product pricing pipeline
 pricing_pipeline = Pipeline(
@@ -332,9 +329,8 @@ print(result.errors)
 ## Advanced Example: Nested Validation
 
 ```python
-from pipeline.core.pipeline.pipeline import Pipeline
-from pipeline.core.pipe.pipe import Pipe
-from pipeline.handlers.base_handler.handler_modifiers import Item
+from pipeline import Pipeline, Pipe
+from pipeline.handlers import Item
 
 # Validate a complex nested structure
 team_pipeline = Pipeline(

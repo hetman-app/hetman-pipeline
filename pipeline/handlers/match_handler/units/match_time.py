@@ -15,7 +15,9 @@ class MatchTime:
         SUPPORT = (HandlerMode.ROOT, HandlerMode.ITEM)
 
         ERROR_TEMPLATES = {
-            HandlerMode.ROOT: lambda _: "Date must be in YYYY-MM-DD format."
+            HandlerMode.ROOT:
+                lambda _:
+                "Date must be in YYYY-MM-DD format (e.g., 2023-10-01)."
         }
 
         def query(self):
@@ -28,18 +30,21 @@ class MatchTime:
         SUPPORT = (HandlerMode.ROOT, HandlerMode.ITEM)
 
         ERROR_TEMPLATES = {
-            HandlerMode.ROOT: lambda _: "Invalid time format (HH:MM[:SS])."
+            HandlerMode.ROOT:
+                lambda _: "Invalid time format (HH:MM[:SS]) (e.g., 14:30:00)."
         }
 
         def query(self):
             return self.fullmatch(r"^(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d)?$")
 
     class DateTime(MatchHandler[str, None]):
-        """Validates ISO 8601 combined Date and Time (e.g., 2023-10-01T14:30:00Z)"""
+        """Validates ISO 8601 combined Date and Time (e.g., 2023-10-01T14:30:00Z)."""
         SUPPORT = (HandlerMode.ROOT, HandlerMode.ITEM)
 
         ERROR_TEMPLATES = {
-            HandlerMode.ROOT: lambda _: "Invalid ISO 8601 DateTime format."
+            HandlerMode.ROOT:
+                lambda _:
+                "Invalid ISO 8601 DateTime format (e.g., 2023-10-01T14:30:00Z)."
         }
 
         def query(self):

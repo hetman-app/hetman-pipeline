@@ -21,7 +21,8 @@ class MatchLocalization:
 
         ERROR_TEMPLATES = {
             HandlerMode.ROOT:
-                lambda _: "Must be a valid 2-letter ISO country code."
+                lambda _:
+                "Must be a valid 2-letter ISO country code (e.g., US)."
         }
 
         def query(self):
@@ -33,7 +34,7 @@ class MatchLocalization:
 
         ERROR_TEMPLATES = {
             HandlerMode.ROOT:
-                lambda _: "Must be a valid 3-letter currency code."
+                lambda _: "Must be a valid 3-letter currency code (e.g., USD)."
         }
 
         def query(self):
@@ -45,7 +46,7 @@ class MatchLocalization:
 
         ERROR_TEMPLATES = {
             HandlerMode.ROOT:
-                lambda _: "Must be a valid 2-letter language code."
+                lambda _: "Must be a valid 2-letter language code (e.g., en)."
         }
 
         def query(self):
@@ -56,7 +57,9 @@ class MatchLocalization:
         SUPPORT = (HandlerMode.ROOT, HandlerMode.ITEM)
 
         ERROR_TEMPLATES = {
-            HandlerMode.ROOT: lambda _: "Invalid IANA timezone string."
+            HandlerMode.ROOT:
+                lambda _:
+                "Invalid IANA timezone string (e.g., America/New_York)."
         }
 
         def query(self):

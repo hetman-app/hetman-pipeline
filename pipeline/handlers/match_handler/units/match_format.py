@@ -20,7 +20,8 @@ class MatchFormat:
 
         ERROR_TEMPLATES = {
             HandlerMode.ROOT:
-                lambda _: "Invalid email address format (e.g., 'user@example.com')."
+                lambda _:
+                "Invalid email address format (e.g., 'user@example.com')."
         }
 
         def query(self):
@@ -32,11 +33,7 @@ class MatchFormat:
         """Validates 36-character hexadecimal unique identifiers (8-4-4-4-12)"""
         SUPPORT = (HandlerMode.ROOT, HandlerMode.ITEM)
 
-        ERROR_TEMPLATES = {
-            HandlerMode.ROOT:
-                lambda _:
-                "Invalid UUID format (e.g., '123e4567-e89b-12d3-a456-426614174000')."
-        }
+        ERROR_TEMPLATES = {HandlerMode.ROOT: lambda _: "Invalid UUID format."}
 
         def query(self):
             return self.fullmatch(

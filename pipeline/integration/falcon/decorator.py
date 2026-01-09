@@ -42,7 +42,7 @@ def process_request(
     data into the decorated responder method.
 
     If validation fails, it automatically sets the response body to the 
-    validation errors and returns a 400 Bad Request status, preventing 
+    validation errors and returns a 422 Unprocessable Content status, preventing 
     the responder from executing. You can use your own error handler via
     `PipelineFalcon.handle_errors`, but it must end the request.
 
@@ -104,7 +104,7 @@ def process_request(
         ) -> bool:
             if result.errors:
                 resp.media = result.errors
-                resp.status = 400
+                resp.status = 422
 
                 return True
 

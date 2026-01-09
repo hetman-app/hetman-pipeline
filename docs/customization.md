@@ -21,8 +21,7 @@ Condition and match handlers have an `ERROR_TEMPLATES` class variable that defin
 ## Basic Error Template Structure
 
 ```python
-from pipeline.handlers.base_handler.resources.constants import HandlerMode
-from pipeline.handlers.base_handler.condition_handler import ConditionHandler
+from pipeline.handlers import HandlerMode, ConditionHandler
 
 class Condition(ConditionHandler):
     ERROR_TEMPLATES = {
@@ -41,8 +40,8 @@ The lambda function receives `self` (the handler instance) and returns a error m
 Directly override the `ERROR_TEMPLATES` dictionary for a specific handler:
 
 ```python
-from pipeline.core.pipe.pipe import Pipe
-from pipeline.handlers.base_handler.resources.constants import HandlerMode
+from pipeline import Pipe
+from pipeline.handlers import HandlerMode
 
 # Customize the Email validator error message
 Pipe.Match.Format.Email.ERROR_TEMPLATES[HandlerMode.ROOT] = lambda _: "Please provide a valid email address."
@@ -65,8 +64,8 @@ print(result.match_errors)
 Use handler properties to create dynamic error messages:
 
 ```python
-from pipeline.core.pipe.pipe import Pipe
-from pipeline.handlers.base_handler.resources.constants import HandlerMode
+from pipeline import Pipe
+from pipeline.handlers import HandlerMode
 
 # Customize MinLength to show the expected length
 Pipe.Condition.MinLength.ERROR_TEMPLATES[HandlerMode.ROOT] = lambda self: (
@@ -90,9 +89,8 @@ print(result.condition_errors)
 Customize error messages for different handler modes:
 
 ```python
-from pipeline.core.pipe.pipe import Pipe
-from pipeline.handlers.base_handler.resources.constants import HandlerMode
-from pipeline.handlers.base_handler.handler_modifiers import Item
+from pipeline import Pipe
+from pipeline.handlers import HandlerMode, Item
 
 # Customize for both ROOT and ITEM modes
 Pipe.Match.Format.Email.ERROR_TEMPLATES[HandlerMode.ROOT] = lambda _: "Invalid email address."
@@ -127,8 +125,8 @@ print(result.match_errors[0][1]['msg'])
 
 ```python
 from contextvars import ContextVar
-from pipeline.core.pipe.pipe import Pipe
-from pipeline.handlers.base_handler.resources.constants import HandlerMode
+from pipeline import Pipe
+from pipeline.handlers import ConditionHandler, HandlerMode, ConditionFlag
 
 locale = ContextVar("locale", default="en")
 
@@ -168,8 +166,8 @@ print(result_pl.condition_errors)
 ### Example 2: Context-Aware Error Messages
 
 ```python
-from pipeline.core.pipe.pipe import Pipe
-from pipeline.handlers.base_handler.resources.constants import HandlerMode
+from pipeline import Pipe
+from pipeline.handlers import HandlerMode
 
 # Customize to show both the value and the argument
 Pipe.Condition.MinNumber.ERROR_TEMPLATES[HandlerMode.ROOT] = lambda self: (
@@ -202,8 +200,8 @@ For complete control over the error structure, you can customize the `ERROR_BUIL
 ### Per-Handler Error Builder
 
 ```python
-from pipeline.core.pipe.pipe import Pipe
-from pipeline.handlers.base_handler.resources.constants import HandlerMode
+from pipeline import Pipe
+from pipeline.handlers import HandlerMode
 
 def custom_email_error_builder(handler):
     """Custom error builder with detailed information"""
@@ -224,8 +222,7 @@ Pipe.Match.Format.Email.ERROR_BUILDER = custom_email_error_builder
 You can also change the `ERROR_BUILDER` globally for all condition or match handlers:
 
 ```python
-from pipeline.handlers.condition_handler.condition_handler import ConditionHandler
-from pipeline.handlers.match_handler.match_handler import MatchHandler
+from pipeline.handlers import ConditionHandler, MatchHandler
 
 def global_condition_error_builder(handler):
     """Global error builder for all condition handlers"""

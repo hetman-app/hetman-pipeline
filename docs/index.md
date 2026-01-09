@@ -193,7 +193,7 @@ flowchart TD
 
     ```python
 
-    from pipeline.core.pipe.pipe import Pipe
+    from pipeline import Pipe
 
     result = Pipe(
         value="john.smith@example.com",

@@ -71,8 +71,7 @@ Hetman Pipeline offers **three flexible ways** to customize hooks, from global t
 Set hooks globally for **all instances** of the `Pipeline` class:
 
 ```python
-from pipeline.core.pipeline.pipeline import Pipeline
-from pipeline.core.pipe.pipe import Pipe
+from pipeline import Pipeline, Pipe
 
 # Define global hooks
 def global_pre_hook(hook):
@@ -112,8 +111,7 @@ pipeline2.run(data={"email": "invalid"})  # Logs failure
 Set hooks for a **specific pipeline instance**:
 
 ```python
-from pipeline.core.pipeline.pipeline import Pipeline
-from pipeline.core.pipe.pipe import Pipe
+from pipeline import Pipeline, Pipe
 
 # Create a pipeline
 user_pipeline = Pipeline(
@@ -180,8 +178,7 @@ result = user_pipeline.run(data={
 Create a **custom Pipeline subclass** with built-in hook logic:
 
 ```python
-from pipeline.core.pipeline.pipeline import Pipeline
-from pipeline.core.pipe.pipe import Pipe
+from pipeline import Pipeline, Pipe
 import logging
 
 class LoggingPipeline(Pipeline):
@@ -263,8 +260,7 @@ result = api_pipeline.run(data={
 Combine inheritance with instance customization for maximum flexibility:
 
 ```python
-from pipeline.core.pipeline.pipeline import Pipeline
-from pipeline.core.pipe.pipe import Pipe
+from pipeline import Pipeline, Pipe
 from datetime import datetime
 
 class AuditPipeline(Pipeline):

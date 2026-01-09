@@ -26,7 +26,7 @@ Both `setup` and `transform` use transform handlers, but they run at different s
 Use `setup` when you need to normalize data **before** validation:
 
 ```python
-from pipeline.core.pipe.pipe import Pipe
+from pipeline import Pipe
 
 # Setup strips whitespace BEFORE checking email format
 result = Pipe(
@@ -44,7 +44,7 @@ print(result.value)  # "user@example.com" (no spaces)
 Use `transform` when you need to modify data **after** validation:
 
 ```python
-from pipeline.core.pipe.pipe import Pipe
+from pipeline import Pipe
 
 # Transform lowercases AFTER validation passes
 result = Pipe(
@@ -62,7 +62,7 @@ print(result.value)  # "user@example.com"
 You can use both together for a complete data processing pipeline:
 
 ```python
-from pipeline.core.pipe.pipe import Pipe
+from pipeline import Pipe
 
 result = Pipe(
     value="  User@Example.COM  ",
@@ -87,8 +87,7 @@ print(result.value)  # "user@example.com"
 While transformations are powerful, sometimes you need custom logic. Use hooks for this:
 
 ```python
-from pipeline.core.pipeline.pipeline import Pipeline
-from pipeline.core.pipe.pipe import Pipe
+from pipeline import Pipeline, Pipe
 
 # Create pipeline
 user_pipeline = Pipeline(

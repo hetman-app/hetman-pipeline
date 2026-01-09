@@ -9,7 +9,7 @@ Hetman Pipeline is designed to be flexible, allowing you to use it as a standalo
 A `Pipe` is the smallest unit of logic. It allows you to validate a single value against specific conditions, matches, and transformations.
 
 ```python
-from pipeline.core.pipe.pipe import Pipe
+from pipeline import Pipe
 
 pipe = Pipe(
     value="john.SMITH@example.com",
@@ -30,7 +30,7 @@ print(result.match_errors)  # []
 The `setup` argument allows you to prepare data before validation. This is useful for normalizing input (like stripping whitespace) before running conditions or matches:
 
 ```python
-from pipeline.core.pipe.pipe import Pipe
+from pipeline import Pipe
 
 # Without setup - validation might fail due to whitespace
 pipe_without_setup = Pipe(
@@ -66,8 +66,7 @@ print(result.condition_errors)  # []
 The `Pipeline` class allows you to define complex schemas for dictionaries. It supports nested pipelines, metadata handling, and custom hooks.
 
 ```python
-from pipeline.core.pipeline.pipeline import Pipeline
-from pipeline.core.pipe.pipe import Pipe
+from pipeline import Pipeline, Pipe
 
 # Define a pipeline for a 'Person' object
 person_pipeline = Pipeline(
@@ -123,8 +122,8 @@ print(result.processed_data, result.errors)
 Apply validation to each item in a list or dictionary:
 
 ```python
-from pipeline.core.pipe.pipe import Pipe
-from pipeline.handlers.base_handler.handler_modifiers import Item
+from pipeline import Pipe
+from pipeline.handlers import Item
 
 # Validate a list of email addresses
 result = Pipe(
@@ -147,9 +146,8 @@ print(result.value)
 Validate fields based on other field values:
 
 ```python
-from pipeline.core.pipeline.pipeline import Pipeline
-from pipeline.core.pipe.pipe import Pipe
-from pipeline.handlers.base_handler.handler_modifiers import Context
+from pipeline import Pipeline, Pipe
+from pipeline.handlers import Context
 
 # Password confirmation example
 registration_pipeline = Pipeline(
@@ -185,8 +183,7 @@ Hooks allow you to inject custom logic before and after each pipe execution.
 ### Pre-Hook: Global Sanitization
 
 ```python
-from pipeline.core.pipeline.pipeline import Pipeline
-from pipeline.core.pipe.pipe import Pipe
+from pipeline import Pipeline, Pipe
 
 # Define a pipeline
 user_pipeline = Pipeline(
@@ -222,8 +219,7 @@ print(result.processed_data)
 ### Post-Hook: Logging and Redaction
 
 ```python
-from pipeline.core.pipeline.pipeline import Pipeline
-from pipeline.core.pipe.pipe import Pipe
+from pipeline import Pipeline, Pipe
 
 # Pipeline with sensitive data
 auth_pipeline = Pipeline(
@@ -273,8 +269,7 @@ result = auth_pipeline.run(data={
 Create reusable pipeline classes with built-in behavior:
 
 ```python
-from pipeline.core.pipeline.pipeline import Pipeline
-from pipeline.core.pipe.pipe import Pipe
+from pipeline import Pipeline, Pipe
 import logging
 
 class LoggingPipeline(Pipeline):
@@ -331,10 +326,8 @@ result = api_pipeline.run(data={
 Customize error messages for better user experience:
 
 ```python
-from pipeline.handlers.condition_handler.resources.constants import ConditionFlag
-from pipeline.handlers.condition_handler.condition_handler import ConditionHandler
-from pipeline.core.pipe.pipe import Pipe
-from pipeline.handlers.base_handler.resources.constants import HandlerMode
+from pipeline.handlers import ConditionHandler, ConditionFlag, HandlerMode
+from pipeline import Pipe
 
 # Customize error messages
 Pipe.Match.Format.Email.ERROR_TEMPLATES[HandlerMode.ROOT] = lambda _: (
@@ -377,8 +370,7 @@ Wrap functions to ensure arguments are validated before execution:
 
 ```python
 from pipeline.core.pipeline.resources.exceptions import PipelineException
-from pipeline.core.pipeline.pipeline import Pipeline
-from pipeline.core.pipe.pipe import Pipe
+from pipeline import Pipeline, Pipe
 
 @Pipeline(
     amount={
@@ -415,8 +407,7 @@ except PipelineException as e:
 Validate nested data structures:
 
 ```python
-from pipeline.core.pipeline.pipeline import Pipeline
-from pipeline.core.pipe.pipe import Pipe
+from pipeline import Pipeline, Pipe
 
 # Define nested pipeline for address
 address_pipeline = Pipeline(
@@ -461,9 +452,8 @@ print(result.processed_data)
 Combine multiple features for complex validation:
 
 ```python
-from pipeline.core.pipeline.pipeline import Pipeline
-from pipeline.core.pipe.pipe import Pipe
-from pipeline.handlers.base_handler.handler_modifiers import Item
+from pipeline import Pipeline, Pipe
+from pipeline.handlers import Item
 
 # E-commerce order validation
 order_pipeline = Pipeline(

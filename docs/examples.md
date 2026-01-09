@@ -171,7 +171,7 @@ result = registration_pipeline.run(data={
 })
 
 print(result.errors)
-# {'password_confirm': [{'id': 'matches_field', 'msg': 'This must match the password field.', 'value': 'Secure'}]}
+# {'password_confirm': [{'id': 'matches_field', 'msg': 'Must match the "password" field.', 'value': 'Secure'}]}
 ```
 
 ---

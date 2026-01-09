@@ -19,7 +19,8 @@ class MatchFormat:
         SUPPORT = (HandlerMode.ROOT, HandlerMode.ITEM)
 
         ERROR_TEMPLATES = {
-            HandlerMode.ROOT: lambda _: "Invalid email address format."
+            HandlerMode.ROOT:
+                lambda _: "Invalid email address format (e.g., 'user@example.com')."
         }
 
         def query(self):
@@ -31,7 +32,11 @@ class MatchFormat:
         """Validates 36-character hexadecimal unique identifiers (8-4-4-4-12)"""
         SUPPORT = (HandlerMode.ROOT, HandlerMode.ITEM)
 
-        ERROR_TEMPLATES = {HandlerMode.ROOT: lambda _: "Invalid UUID format."}
+        ERROR_TEMPLATES = {
+            HandlerMode.ROOT:
+                lambda _:
+                "Invalid UUID format (e.g., '123e4567-e89b-12d3-a456-426614174000')."
+        }
 
         def query(self):
             return self.fullmatch(
@@ -56,7 +61,8 @@ class MatchFormat:
 
         ERROR_TEMPLATES = {
             HandlerMode.ROOT:
-                lambda _: "Invalid international phone format (E.164)."
+                lambda _:
+                "Invalid phone number format. Must use international format (e.g., '+1234567890')."
         }
 
         def query(self):
@@ -79,9 +85,12 @@ class MatchFormat:
         STRICT = "strict"
 
         ERROR_MESSAGE = {
-            RELAXED: "Min 6, Max 64, 1 Upper, 1 Lower",
-            NORMAL: "Min 6, Max 64, 1 Upper, 1 Lower, 1 Digit",
-            STRICT: "Min 6, Max 64, 1 Upper, 1 Lower, 1 Digit, 1 Special"
+            RELAXED:
+                "Password too weak. Required: 6-64 characters, at least 1 uppercase and 1 lowercase letter.",
+            NORMAL:
+                "Password too weak. Required: 6-64 characters, at least 1 uppercase, 1 lowercase, and 1 digit.",
+            STRICT:
+                "Password too weak. Required: 6-64 characters, at least 1 uppercase, 1 lowercase, 1 digit, and 1 special character."
         }
 
         ERROR_TEMPLATES = {

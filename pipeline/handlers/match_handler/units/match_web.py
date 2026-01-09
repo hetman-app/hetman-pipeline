@@ -15,7 +15,9 @@ class MatchWeb:
         """Validates a domain name based on RFC 1035."""
         SUPPORT = (HandlerMode.ROOT, HandlerMode.ITEM)
 
-        ERROR_TEMPLATES = {HandlerMode.ROOT: lambda _: "Invalid domain format."}
+        ERROR_TEMPLATES = {
+            HandlerMode.ROOT: lambda _: "Invalid domain format (e.g., 'example.com')."
+        }
 
         def query(self):
             return self.fullmatch(
@@ -26,7 +28,11 @@ class MatchWeb:
         """Validates web URLs using HTTP or HTTPS protocols."""
         SUPPORT = (HandlerMode.ROOT, HandlerMode.ITEM)
 
-        ERROR_TEMPLATES = {HandlerMode.ROOT: lambda _: "Invalid URL format."}
+        ERROR_TEMPLATES = {
+            HandlerMode.ROOT:
+                lambda _:
+                "Invalid URL format. Must be a valid HTTP/HTTPS URL (e.g., 'https://example.com')."
+        }
 
         def query(self):
             return self.fullmatch(

@@ -45,6 +45,7 @@ nav:
           - Match: match.md
           - Transform: transform.md
     - Custom Handlers: custom_handlers.md
+    - Plugins: plugins.md
     - Technical Reference: technical_reference.md
 
 extra_css:

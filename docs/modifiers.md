@@ -56,7 +56,7 @@ result = Pipe(
 ).run()
 
 print(result.match_errors)
-# [{1: {'id': 'email', 'msg': 'Invalid email address format.', 'value': 'invalid-email'}}]
+# [{1: {'id': 'email', 'msg': "Invalid email address format (e.g., 'user@example.com').", 'value': 'invalid-email'}}]
 ```
 
 ---
@@ -207,7 +207,7 @@ print(result.errors)
 #         {
 #             1: {
 #                 "id": "email",
-#                 "msg": "Invalid email address format.",
+#                 "msg": "Invalid email address format (e.g., 'user@example.com').",
 #                 "value": "user1company.com",
 #             }
 #         }
@@ -271,7 +271,7 @@ result = registration_pipeline.run(data={
 })
 
 print(result.errors)
-# {'password_confirm': [{'id': 'matches_field', 'msg': 'This must match the password field.', 'value': 'DifferentPass456!'}]}
+# {'password_confirm': [{'id': 'matches_field', 'msg': 'Must match the "password" field.', 'value': 'DifferentPass456!'}]}
 ```
 
 ---

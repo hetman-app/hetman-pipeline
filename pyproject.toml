@@ -28,6 +28,9 @@ Issues = "https://github.com/hetman-app/hetman-pipeline/issues"
 [tool.setuptools.packages.find]
 where = ["."]
 
+[tool.setuptools.package-data]
+pipeline = ["py.typed"]
+
 [project.optional-dependencies]
 falcon = ["falcon>=4.0.0"]
 docs = ["mkdocs>=1.6", "mkdocstrings[python]>=0.18.1", "mkdocs-material>=9.7.1"]

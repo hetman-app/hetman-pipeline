@@ -61,14 +61,14 @@ app.add_route('/users', UserResource())
 
 1. **Request Data Extraction**: The decorator automatically extracts data from:
 
-    - Query parameters (for GET requests)
-    - Request body (for POST, PUT, PATCH, etc.)
+    - Query parameters (for GET requests): This is slightly more complex because all query values are passed as strings. We attempt to JSON-deserialize every value so that each query parameter is parsed as JSON.
+    - Request body (for POST, PUT, PATCH, etc.): We use the .get_media() method to retrieve the payload.
 
 2. **Validation**: Data is validated using the pipeline configuration
 
 3. **Error Handling**: If validation fails:
 
-    - Response status is set to `400 Bad Request`
+    - Response status is set to `422 Unprocessable Content`
     - Response body contains validation errors
     - Responder method is **not** executed
 
@@ -82,17 +82,20 @@ app.add_route('/users', UserResource())
 
 ```python
 from falcon import App, Request, Response
-from pipeline.integration.falcon import process_request
+
 from pipeline import Pipe
+from pipeline.integration.falcon import process_request
+
 
 class RegistrationResource:
     @process_request(
         username={
             "type": str,
-            "conditions": {
-                Pipe.Condition.MinLength: 3,
-                Pipe.Condition.MaxLength: 20
-            },
+            "conditions":
+                {
+                    Pipe.Condition.MinLength: 3,
+                    Pipe.Condition.MaxLength: 20
+                },
             "matches": {
                 Pipe.Match.Text.Alphanumeric: None
             },
@@ -102,26 +105,43 @@ class RegistrationResource:
         },
         email={
             "type": str,
-            "conditions": {Pipe.Condition.MaxLength: 64},
-            "matches": {Pipe.Match.Format.Email: None},
-            "transform": {Pipe.Transform.Lowercase: None}
+            "conditions": {
+                Pipe.Condition.MaxLength: 64
+            },
+            "matches": {
+                Pipe.Match.Format.Email: None
+            },
+            "transform": {
+                Pipe.Transform.Lowercase: None
+            }
         },
         password={
             "type": str,
-            "matches": {
-                Pipe.Match.Format.Password: Pipe.Match.Format.Password.STRICT
-            }
+            "matches":
+                {
+                    Pipe.Match.Format.Password:
+                        Pipe.Match.Format.Password.STRICT
+                }
         },
         age={
             "type": int,
-            "conditions": {
-                Pipe.Condition.MinNumber: 18,
-                Pipe.Condition.MaxNumber: 120
-            },
+            "conditions":
+                {
+                    Pipe.Condition.MinNumber: 18,
+                    Pipe.Condition.MaxNumber: 120
+                },
             "optional": True
         }
     )
-    def on_post(self, req: Request, resp: Response, username, email, password, age=None):
+    def on_post(
+        self,
+        req: Request,
+        resp: Response,
+        username: str,
+        email: str,
+        password: str,
+        age: int | None = None
+    ):
         # All parameters are validated and transformed
         # username and email are lowercased
         # password meets strict requirements
@@ -182,28 +202,28 @@ curl -X POST http://localhost:5000/register \
   }'
 ```
 
-**Response (400 Bad Request):**
+**Response (422 Unprocessable Content):**
 
 ```json
 {
 	"username": [
 		{
 			"id": "min_length",
-			"msg": "Too short. This must be at least 3 characters.",
+			"msg": "Too short. Minimum length is 3 characters.",
 			"value": "ab"
 		}
 	],
 	"email": [
 		{
 			"id": "email",
-			"msg": "Invalid email address format.",
+			"msg": "Invalid email address format (e.g., 'user@example.com').",
 			"value": "invalid-email"
 		}
 	],
 	"password": [
 		{
 			"id": "password",
-			"msg": "Min 6, Max 64, 1 Upper, 1 Lower, 1 Digit, 1 Special",
+			"msg": "Password too weak. Required: 6-64 characters, at least 1 uppercase, 1 lowercase, 1 digit, and 1 special character.",
 			"value": "weak"
 		}
 	]
@@ -286,7 +306,7 @@ class AsyncUserResource:
             "matches": {Pipe.Match.Format.Email: None}
         }
     )
-    async def on_post(self, req: Request, resp: Response, email):
+    async def on_post(self, req: Request, resp: Response, email: str):
         # Async responder with validated email
         user = await create_user_async(email)
 
@@ -454,7 +474,7 @@ def create_user():
     result = user_pipeline.run(data=request.json)
 
     if result.errors:
-        return jsonify(result.errors), 400
+        return jsonify(result.errors), 422
 
     # Use validated data
     return jsonify({

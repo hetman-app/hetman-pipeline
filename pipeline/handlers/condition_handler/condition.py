@@ -68,6 +68,23 @@ class Condition:
         def query(self):
             return len(self.value) <= self.argument
 
+    class ExactLength(ConditionHandler[str | list | dict, int]):
+        """Ensures the collection or string is exactly N items/characters long"""
+        FLAGS = (ConditionFlag.BREAK_PIPE_LOOP_ON_ERROR, )
+
+        SUPPORT = (HandlerMode.ROOT, HandlerMode.ITEM)
+
+        ERROR_TEMPLATES = {
+            HandlerMode.ROOT:
+                lambda self:
+                f"Invalid length. Must be exactly {self.argument} characters."
+                if isinstance(self.value, str) else
+                f"Invalid count. Must contain exactly {self.argument} items."
+        }
+
+        def query(self):
+            return len(self.value) == self.argument
+
     class MinNumber(ConditionHandler[int | float, int | float]):
         """Ensures the numeric value is greater than or equal to N"""
         SUPPORT = (HandlerMode.ROOT, HandlerMode.ITEM, HandlerMode.CONTEXT)

@@ -90,7 +90,7 @@ class Pipe(Generic[V, T]):
         self._condition_errors: ConditionErrors = []
         self._match_errors: ConditionErrors = []
 
-    def run(self) -> PipeResult[V]:
+    def run(self) -> PipeResult:
         """
         Executes the pipe processing logic.
 
@@ -123,16 +123,23 @@ class Pipe(Generic[V, T]):
 
         return self._construct_result()
 
-    def _construct_result(self) -> PipeResult[V]:
+    def _construct_result(self) -> PipeResult:
         """
         Constructs and returns the final PipeResult.
+        
+        If the pipe is marked as optional and the value is falsy, 
+        the result value is set to None.
 
         Returns:
-            PipeResult[V]: A result object containing the current value and any accumulated
-            condition or match errors.
+            PipeResult: A result object containing the current value (or None 
+            if optional and empty) and any accumulated condition or match errors.
         """
+        value: V | None = None if self.optional and not bool(
+            self.value
+        ) else self.value
+
         return PipeResult(
-            value=self.value,
+            value=value,
             condition_errors=self._condition_errors,
             match_errors=self._match_errors
         )
